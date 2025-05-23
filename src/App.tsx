@@ -5,12 +5,43 @@ import Navbar from './components/Navbar';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Footer from './components/Footer';
+import Login from './components/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 import React, { useRef, useState } from 'react';
+import AdminPanel from './components/AdminPanel';
 
 function ProjectOrderForm() {
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form submitted');
+    const formData = new FormData(e.currentTarget);
+    
+    const submission = {
+      id: Date.now().toString(),
+      firstName: formData.get('firstName'),
+      lastName: formData.get('lastName'),
+      email: formData.get('email'),
+      projectType: formData.get('projectType'),
+      budget: formData.get('budget'),
+      timeline: formData.get('timeline'),
+      description: formData.get('description'),
+      submittedAt: new Date().toISOString()
+    };
+
+    // Get existing submissions
+    const existingSubmissions = localStorage.getItem('projectSubmissions');
+    const submissions = existingSubmissions ? JSON.parse(existingSubmissions) : [];
+    
+    // Add new submission
+    submissions.push(submission);
+    
+    // Save updated submissions
+    localStorage.setItem('projectSubmissions', JSON.stringify(submissions));
+    
+    // Reset form
+    e.currentTarget.reset();
+    
+    // Show success message (you can add a toast notification here)
+    alert('Thank you for your submission! We will get back to you soon.');
   };
 
   return (
@@ -359,12 +390,30 @@ function App() {
       <div className="relative min-h-screen overflow-hidden">
         <div className="fixed inset-0 w-full h-full custom-animated-gradient noise-texture z-0" />
 
-        <Navbar />
-        <main className="relative z-10">
-          <Routes>
-            <Route path="/" element={<Home />} />
-          </Routes>
-        </main>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <>
+                  <Navbar />
+                  <main className="relative z-10">
+                    <Home />
+                  </main>
+                </>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
       </div>
     </Router>
   );
