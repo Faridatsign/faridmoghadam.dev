@@ -262,24 +262,30 @@ function Home() {
             <h2 className="text-4xl font-bold text-blue-900 mb-4">What I Can Do For You</h2>
             <p className="text-xl text-blue-800">Cutting-edge solutions powered by modern technology</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                icon: CodeBracketIcon,
-                title: "Web Technologies",
-                description: "Modern web development using the latest frameworks and tools. From responsive single-page applications to complex web platforms with real-time capabilities and cloud integration.",
+                icon: CpuChipIcon,
+                title: "AI & Machine Learning",
+                description: "Custom AI solutions including predictive modeling, computer vision, and natural language processing. From research paper implementation to production-ready ML models with MLOps integration.",
                 color: "text-blue-600"
               },
               {
                 icon: ChartBarIcon,
-                title: "Data Science",
-                description: "Advanced data analysis and machine learning solutions. Transform raw data into valuable insights, build predictive models, and create intelligent systems that learn from your data.",
+                title: "Data Science & Analytics",
+                description: "Advanced data analysis, statistical modeling, and business intelligence solutions. Transform complex data into actionable insights using Python, R, and modern BI tools.",
                 color: "text-blue-600"
               },
               {
-                icon: CpuChipIcon,
-                title: "Computer Vision",
-                description: "State-of-the-art computer vision solutions for image and video processing. From object detection and recognition to automated visual inspection and augmented reality applications.",
+                icon: CodeBracketIcon,
+                title: "Web & Mobile Development",
+                description: "Full-stack development of modern web applications and mobile apps. From responsive single-page applications to complex platforms with real-time capabilities and cloud integration.",
+                color: "text-blue-600"
+              },
+              {
+                icon: RocketLaunchIcon,
+                title: "Database & Cloud Solutions",
+                description: "Design and implementation of scalable database architectures and cloud infrastructure. Expert in both SQL and NoSQL databases, AWS services, and cloud-native applications.",
                 color: "text-blue-600"
               }
             ].map((item, index) => (

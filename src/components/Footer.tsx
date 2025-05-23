@@ -106,14 +106,30 @@ const Footer = () => {
           {/* Newsletter */}
           <div>
             <h4 className="text-lg font-semibold text-white mb-4">Technologies Used</h4>
-            <ul className="space-y-2 text-gray-400">
-              <li>React</li>
-              <li>Vite</li>
-              <li>Tailwind CSS</li>
-              <li>Framer Motion</li>
-              <li>React Icons</li>
-              <li>Heroicons</li>
-            </ul>
+            <div className="space-y-3">
+              <div>
+                <h5 className="text-sm font-medium text-blue-400 mb-2">Frontend</h5>
+                <ul className="space-y-1 text-gray-400 text-sm">
+                  <li>React.js</li>
+                  <li>TypeScript</li>
+                  <li>Vite</li>
+                  <li>Tailwind CSS</li>
+                  <li>Framer Motion</li>
+                  <li>React Router</li>
+                  <li>HeadlessUI</li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="text-sm font-medium text-blue-400 mb-2">Backend</h5>
+                <ul className="space-y-1 text-gray-400 text-sm">
+                  <li>Node.js</li>
+                  <li>Express.js</li>
+                  <li>MongoDB</li>
+                  <li>JWT Auth</li>
+                  <li>TypeScript</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
