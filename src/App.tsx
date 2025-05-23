@@ -11,6 +11,8 @@ import React, { useRef, useState } from 'react';
 import AdminPanel from './components/AdminPanel';
 
 function ProjectOrderForm() {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -38,156 +40,101 @@ function ProjectOrderForm() {
     localStorage.setItem('projectSubmissions', JSON.stringify(submissions));
     
     // Reset form
-    e.currentTarget.reset();
+    // e.currentTarget.reset();
     
-    // Show success message (you can add a toast notification here)
-    alert('Thank you for your submission! We will get back to you soon.');
+    // Set submitted state to true instead of showing alert
+    setIsSubmitted(true);
+
+    // Note: The current implementation saves to localStorage. 
+    // To save to your backend API, you would replace the localStorage logic here
+    // with an asynchronous fetch or axios call to your POST /api/submissions endpoint.
+    // You would also handle success/error responses from the backend API.
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Personal Information */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50">
-          <h3 className="text-2xl font-bold text-blue-900 mb-6 pb-2 border-b border-blue-100">
-            Personal Information
-          </h3>
-          
-          <div className="space-y-6">
-            <div className="group">
-              <label htmlFor="firstName" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white"
-                placeholder="John"
-              />
+    <div className="max-w-5xl mx-auto">
+      {isSubmitted ? (
+        // Render a success message when submitted
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative text-center shadow-lg transition-all duration-300">
+          <strong className="font-bold">Success!</strong>
+          <span className="block sm:inline"> Thank you for your project submission. We will get back to you soon.</span>
+          {/* Optional: Add a button to submit another form */}
+          {/* <button onClick={() => setIsSubmitted(false)} className="mt-4 px-4 py-2 bg-green-600 text-white rounded">Submit Another</button> */}
+        </div>
+      ) : (
+        // Render the form when not submitted
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Personal Information */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50">
+              <h3 className="text-2xl font-bold text-blue-900 mb-6 pb-2 border-b border-blue-100">
+                Personal Information
+              </h3>
+              <div className="space-y-6">
+                <div className="group">
+                  <label htmlFor="firstName" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">First Name</label>
+                  <input type="text" id="firstName" name="firstName" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white" placeholder="John" />
+                </div>
+                <div className="group">
+                  <label htmlFor="lastName" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Last Name</label>
+                  <input type="text" id="lastName" name="lastName" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white" placeholder="Doe" />
+                </div>
+                <div className="group">
+                  <label htmlFor="email" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Email</label>
+                  <input type="email" id="email" name="email" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white" placeholder="john@example.com" />
+                </div>
+              </div>
             </div>
-
-            <div className="group">
-              <label htmlFor="lastName" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white"
-                placeholder="Doe"
-              />
-            </div>
-
-            <div className="group">
-              <label htmlFor="email" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white"
-                placeholder="john@example.com"
-              />
+            {/* Project Information */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50">
+              <h3 className="text-2xl font-bold text-blue-900 mb-6 pb-2 border-b border-blue-100">Project Details</h3>
+              <div className="space-y-6">
+                <div className="group">
+                  <label htmlFor="projectType" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Project Type</label>
+                  <select id="projectType" name="projectType" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white appearance-none">
+                    <option value="">Select a project type</option>
+                    <option value="web">Web Development</option>
+                    <option value="mobile">Mobile App</option>
+                    <option value="data">Data Science</option>
+                    <option value="ml">Machine Learning</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="group">
+                  <label htmlFor="budget" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Budget Range</label>
+                  <select id="budget" name="budget" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white appearance-none">
+                    <option value="">Select a budget range</option>
+                    <option value="small">$1,000 - $5,000</option>
+                    <option value="medium">$5,000 - $10,000</option>
+                    <option value="large">$10,000 - $25,000</option>
+                    <option value="enterprise">$25,000+</option>
+                  </select>
+                </div>
+                <div className="group">
+                  <label htmlFor="timeline" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Expected Timeline</label>
+                  <select id="timeline" name="timeline" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white appearance-none">
+                    <option value="">Select a timeline</option>
+                    <option value="urgent">Urgent (1-2 weeks)</option>
+                    <option value="normal">Normal (1-3 months)</option>
+                    <option value="flexible">Flexible (3+ months)</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Project Information */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50">
-          <h3 className="text-2xl font-bold text-blue-900 mb-6 pb-2 border-b border-blue-100">
-            Project Details
-          </h3>
-          
-          <div className="space-y-6">
+          {/* Project Description */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50">
+            <h3 className="text-2xl font-bold text-blue-900 mb-6 pb-2 border-b border-blue-100">Project Description</h3>
             <div className="group">
-              <label htmlFor="projectType" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">
-                Project Type
-              </label>
-              <select
-                id="projectType"
-                name="projectType"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white appearance-none"
-              >
-                <option value="">Select a project type</option>
-                <option value="web">Web Development</option>
-                <option value="mobile">Mobile App</option>
-                <option value="data">Data Science</option>
-                <option value="ml">Machine Learning</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div className="group">
-              <label htmlFor="budget" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">
-                Budget Range
-              </label>
-              <select
-                id="budget"
-                name="budget"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white appearance-none"
-              >
-                <option value="">Select a budget range</option>
-                <option value="small">$1,000 - $5,000</option>
-                <option value="medium">$5,000 - $10,000</option>
-                <option value="large">$10,000 - $25,000</option>
-                <option value="enterprise">$25,000+</option>
-              </select>
-            </div>
-
-            <div className="group">
-              <label htmlFor="timeline" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">
-                Expected Timeline
-              </label>
-              <select
-                id="timeline"
-                name="timeline"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white appearance-none"
-              >
-                <option value="">Select a timeline</option>
-                <option value="urgent">Urgent (1-2 weeks)</option>
-                <option value="normal">Normal (1-3 months)</option>
-                <option value="flexible">Flexible (3+ months)</option>
-              </select>
+              <textarea id="description" name="description" rows={6} required placeholder="Please describe your project in detail. Include any specific requirements, features, or technologies you'd like to use." className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white resize-none"></textarea>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Project Description */}
-      <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50">
-        <h3 className="text-2xl font-bold text-blue-900 mb-6 pb-2 border-b border-blue-100">
-          Project Description
-        </h3>
-        <div className="group">
-          <textarea
-            id="description"
-            name="description"
-            rows={6}
-            required
-            placeholder="Please describe your project in detail. Include any specific requirements, features, or technologies you'd like to use."
-            className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white resize-none"
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          className="px-8 py-4 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 shadow-lg hover:shadow-xl"
-        >
-          Submit Project Request
-        </button>
-      </div>
-    </form>
+          <div className="flex justify-end">
+            <button type="submit" className="px-8 py-4 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 shadow-lg hover:shadow-xl">Submit Project Request</button>
+          </div>
+        </form>
+      )}
+    </div>
   );
 }
 
@@ -391,7 +338,21 @@ function App() {
         <div className="fixed inset-0 w-full h-full custom-animated-gradient noise-texture z-0" />
 
         <Routes>
+          {/* Public Routes */}
           <Route path="/login" element={<Login />} />
+          <Route // Homepage is now public
+            path="/"
+            element={
+              <>
+                <Navbar />
+                <main className="relative z-10">
+                  <Home />
+                </main>
+              </>
+            }
+          />
+
+          {/* Protected Routes */}
           <Route
             path="/admin"
             element={
@@ -400,19 +361,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <>
-                  <Navbar />
-                  <main className="relative z-10">
-                    <Home />
-                  </main>
-                </>
-              </ProtectedRoute>
-            }
-          />
+          {/* Add other protected routes here within ProtectedRoute */}
         </Routes>
       </div>
     </Router>

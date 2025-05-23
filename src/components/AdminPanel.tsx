@@ -18,16 +18,49 @@ function AdminPanel() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Load submissions from localStorage
-    const storedSubmissions = localStorage.getItem('projectSubmissions');
-    if (storedSubmissions) {
-      setSubmissions(JSON.parse(storedSubmissions));
-    }
-  }, []);
+    const fetchSubmissions = async () => {
+      const token = localStorage.getItem('token'); // Get token from localStorage
+      if (!token) {
+        // If no token, redirect to login (though ProtectedRoute should handle this)
+        navigate('/login');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:5000/api/submissions', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setSubmissions(data);
+        } else {
+          // Handle errors (e.g., token expired or invalid)
+          console.error('Failed to fetch submissions:', response.status, response.statusText);
+          // Optionally clear token and redirect to login on certain errors (e.g., 401)
+           if (response.status === 401) {
+             localStorage.removeItem('token');
+             navigate('/login');
+           }
+           // Display a user-friendly error message on the UI if needed
+        }
+      } catch (error) {
+        console.error('Error fetching submissions:', error);
+        // Handle network errors
+        // Display a user-friendly error message on the UI if needed
+      }
+    };
+
+    fetchSubmissions();
+  }, [navigate]); // Depend on navigate to avoid lint warnings, although it's stable
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    navigate('/login');
+    localStorage.removeItem('token'); // Remove the token from localStorage
+    navigate('/'); // Navigate to homepage after logout
   };
 
   const formatDate = (dateString: string) => {

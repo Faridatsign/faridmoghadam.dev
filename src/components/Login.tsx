@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -7,16 +7,42 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/admin', { replace: true });
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simple authentication check
-    if (username === 'admin' && password === 'admin') {
-      // Set authentication state
-      localStorage.setItem('isAuthenticated', 'true');
-      navigate('/admin');
-    } else {
-      setError('Invalid username or password');
+    setError(''); // Clear previous errors
+
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Assuming the backend returns a token in the response body, e.g., { token: '...' }
+        localStorage.setItem('token', data.token);
+        // You might also want to store user info if returned
+        // localStorage.setItem('user', JSON.stringify(data.user));
+        navigate('/admin'); // Navigate to admin panel on success
+      } else {
+        // Handle backend errors (e.g., invalid credentials)
+        setError(data.message || 'Login failed. Please check your credentials.');
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error('Login error:', error);
+      setError('An error occurred during login. Please try again later.');
     }
   };
 
