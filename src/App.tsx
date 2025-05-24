@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDownIcon, CodeBracketIcon, ChartBarIcon, CpuChipIcon, EnvelopeIcon, AcademicCapIcon, RocketLaunchIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Navbar from './components/Navbar';
@@ -9,146 +9,129 @@ import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import React, { useRef, useState } from 'react';
 import AdminPanel from './components/AdminPanel';
+import ProjectOrderForm from './components/ProjectOrderForm';
 
-function ProjectOrderForm() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    
-    const submission = {
-      id: Date.now().toString(),
-      firstName: formData.get('firstName'),
-      lastName: formData.get('lastName'),
-      email: formData.get('email'),
-      projectType: formData.get('projectType'),
-      budget: formData.get('budget'),
-      timeline: formData.get('timeline'),
-      description: formData.get('description'),
-      submittedAt: new Date().toISOString()
-    };
-
-    // Get existing submissions
-    const existingSubmissions = localStorage.getItem('projectSubmissions');
-    const submissions = existingSubmissions ? JSON.parse(existingSubmissions) : [];
-    
-    // Add new submission
-    submissions.push(submission);
-    
-    // Save updated submissions
-    localStorage.setItem('projectSubmissions', JSON.stringify(submissions));
-    
-    // Reset form
-    // e.currentTarget.reset();
-    
-    // Set submitted state to true instead of showing alert
-    setIsSubmitted(true);
-
-    // Note: The current implementation saves to localStorage. 
-    // To save to your backend API, you would replace the localStorage logic here
-    // with an asynchronous fetch or axios call to your POST /api/submissions endpoint.
-    // You would also handle success/error responses from the backend API.
-  };
+// Add this new component for animated background
+const AnimatedBackground = () => {
+  const lines = Array.from({ length: 40 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    length: Math.random() * 150 + 100,
+    angle: Math.random() * 360,
+    duration: Math.random() * 15 + 8,
+    delay: Math.random() * 3,
+    opacity: Math.random() * 0.3 + 0.7,
+  }));
 
   return (
-    <div className="max-w-5xl mx-auto">
-      {isSubmitted ? (
-        // Render a success message when submitted
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative text-center shadow-lg transition-all duration-300">
-          <strong className="font-bold">Success!</strong>
-          <span className="block sm:inline"> Thank you for your project submission. We will get back to you soon.</span>
-          {/* Optional: Add a button to submit another form */}
-          {/* <button onClick={() => setIsSubmitted(false)} className="mt-4 px-4 py-2 bg-green-600 text-white rounded">Submit Another</button> */}
-        </div>
-      ) : (
-        // Render the form when not submitted
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Personal Information */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50">
-              <h3 className="text-2xl font-bold text-blue-900 mb-6 pb-2 border-b border-blue-100">
-                Personal Information
-              </h3>
-              <div className="space-y-6">
-                <div className="group">
-                  <label htmlFor="firstName" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">First Name</label>
-                  <input type="text" id="firstName" name="firstName" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white" placeholder="John" />
-                </div>
-                <div className="group">
-                  <label htmlFor="lastName" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Last Name</label>
-                  <input type="text" id="lastName" name="lastName" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white" placeholder="Doe" />
-                </div>
-                <div className="group">
-                  <label htmlFor="email" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Email</label>
-                  <input type="email" id="email" name="email" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white" placeholder="john@example.com" />
-                </div>
-              </div>
-            </div>
-            {/* Project Information */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50">
-              <h3 className="text-2xl font-bold text-blue-900 mb-6 pb-2 border-b border-blue-100">Project Details</h3>
-              <div className="space-y-6">
-                <div className="group">
-                  <label htmlFor="projectType" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Project Type</label>
-                  <select id="projectType" name="projectType" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white appearance-none">
-                    <option value="">Select a project type</option>
-                    <option value="web">Web Development</option>
-                    <option value="mobile">Mobile App</option>
-                    <option value="data">Data Science</option>
-                    <option value="ml">Machine Learning</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div className="group">
-                  <label htmlFor="budget" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Budget Range</label>
-                  <select id="budget" name="budget" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white appearance-none">
-                    <option value="">Select a budget range</option>
-                    <option value="small">$1,000 - $5,000</option>
-                    <option value="medium">$5,000 - $10,000</option>
-                    <option value="large">$10,000 - $25,000</option>
-                    <option value="enterprise">$25,000+</option>
-                  </select>
-                </div>
-                <div className="group">
-                  <label htmlFor="timeline" className="block text-sm font-medium text-blue-700 mb-1 group-hover:text-blue-600 transition-colors">Expected Timeline</label>
-                  <select id="timeline" name="timeline" required className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white appearance-none">
-                    <option value="">Select a timeline</option>
-                    <option value="urgent">Urgent (1-2 weeks)</option>
-                    <option value="normal">Normal (1-3 months)</option>
-                    <option value="flexible">Flexible (3+ months)</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Project Description */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-50">
-            <h3 className="text-2xl font-bold text-blue-900 mb-6 pb-2 border-b border-blue-100">Project Description</h3>
-            <div className="group">
-              <textarea id="description" name="description" rows={6} required placeholder="Please describe your project in detail. Include any specific requirements, features, or technologies you'd like to use." className="w-full px-4 py-3 rounded-xl border border-blue-100 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white/50 hover:bg-white resize-none"></textarea>
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <button type="submit" className="px-8 py-4 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 shadow-lg hover:shadow-xl">Submit Project Request</button>
-          </div>
-        </form>
-      )}
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {lines.map((line) => (
+        <motion.div
+          key={line.id}
+          className="absolute"
+          style={{
+            left: `${line.x}%`,
+            top: `${line.y}%`,
+            width: `${line.length}px`,
+            height: '3px',
+            background: 'linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(59, 130, 246, 0.8) 50%, rgba(59, 130, 246, 0) 100%)',
+            transform: `rotate(${line.angle}deg)`,
+            transformOrigin: 'left center',
+            boxShadow: '0 0 8px rgba(59, 130, 246, 0.3)',
+          }}
+          animate={{
+            opacity: [0, line.opacity, 0],
+            scale: [0.8, 1.2, 0.8],
+            x: [0, 100, 0],
+            y: [0, 50, 0],
+          }}
+          transition={{
+            duration: line.duration,
+            delay: line.delay,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+      ))}
+      {lines.map((line) => (
+        <motion.div
+          key={`secondary-${line.id}`}
+          className="absolute"
+          style={{
+            left: `${(line.x + 30) % 100}%`,
+            top: `${(line.y + 20) % 100}%`,
+            width: `${line.length * 0.7}px`,
+            height: '2px',
+            background: 'linear-gradient(90deg, rgba(37, 99, 235, 0) 0%, rgba(37, 99, 235, 0.6) 50%, rgba(37, 99, 235, 0) 100%)',
+            transform: `rotate(${line.angle + 45}deg)`,
+            transformOrigin: 'left center',
+            boxShadow: '0 0 6px rgba(37, 99, 235, 0.2)',
+          }}
+          animate={{
+            opacity: [0, line.opacity * 0.7, 0],
+            scale: [0.8, 1.1, 0.8],
+            x: [0, 80, 0],
+            y: [0, 40, 0],
+          }}
+          transition={{
+            duration: line.duration * 1.2,
+            delay: line.delay + 1,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+      ))}
     </div>
   );
-}
+};
 
 function Home() {
+  // Define the text content for the hero section
+  const heroText = [
+    "Unlock the power of",
+    "AI and Machine Learning",
+    "for your business.",
+  ];
+
+  // Services data - updated to reflect AI/ML focus
+  const services = [
+    {
+      icon: <CpuChipIcon className="h-12 w-12 text-blue-500 mx-auto mb-4" />,
+      title: "AI & Machine Learning Development",
+      description: "Custom AI/ML model training, integration, and deployment for predictive analytics, automation, and more.",
+    },
+    {
+      icon: <ChartBarIcon className="h-12 w-12 text-green-500 mx-auto mb-4" />,
+      title: "Data Science & Analytics",
+      description: "Unlock insights from your data with advanced statistical analysis, data visualization, and reporting.",
+    },
+    {
+      icon: <CodeBracketIcon className="h-12 w-12 text-purple-500 mx-auto mb-4" />,
+      title: "Full-Stack Web & Mobile Development",
+      description: "Building robust and scalable web and mobile applications tailored to your needs.",
+    },
+  ];
+
+  const contactRef = useRef<HTMLDivElement>(null);
+
+  const scrollToContact = () => {
+    contactRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen">
       <Navbar />
       {/* Hero Section */}
       <section id="hero" className="relative flex items-center justify-center min-h-[90vh] overflow-hidden py-20">
-        {/* Animated Gradient Background */}
-        <div className="absolute inset-0 z-0 custom-animated-gradient"/>
+        {/* Animated Background */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-white to-blue-50/80 opacity-95" />
+          <AnimatedBackground />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-200/30 via-transparent to-transparent" />
+        </div>
 
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 z-10">
           <div className="text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -156,22 +139,39 @@ function Home() {
               transition={{ duration: 0.8 }}
               className="space-y-6"
             >
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 tracking-tight">
+              <motion.h1 
+                className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 tracking-tight"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
                 Farid Moghadam
-              </h1>
-              <p className="text-xl sm:text-2xl text-gray-700 max-w-2xl mx-auto">
-              Data Scientist with expertise in AI, Machine Learning, and Data Analytics. Proficient 
-              in developingscalable ML models, optimizing feature engineering, and deploying deep learning frameworks. 
-              Skilledin Python, R, SQL, and AWS services to drive data-drivendecision-making.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <a
+              </motion.h1>
+              <motion.p 
+                className="text-xl sm:text-2xl text-gray-700 max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Data Scientist with expertise in AI, Machine Learning, and Data Analytics. Proficient 
+                in developing scalable ML models, optimizing feature engineering, and deploying deep learning frameworks. 
+                Skilled in Python, R, SQL, and AWS services to drive data-driven decision-making.
+              </motion.p>
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                <motion.a
                   href="#order"
-                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   Start Your Project
-                </a>
-              </div>
+                </motion.a>
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -179,10 +179,15 @@ function Home() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10"
         >
-          <ArrowDownIcon className="h-8 w-8 text-blue-500 animate-bounce" />
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ArrowDownIcon className="h-8 w-8 text-blue-500" />
+          </motion.div>
         </motion.div>
       </section>
 

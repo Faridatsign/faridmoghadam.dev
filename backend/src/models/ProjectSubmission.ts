@@ -4,6 +4,8 @@ export interface IProjectSubmission extends mongoose.Document {
   firstName: string;
   lastName: string;
   email: string;
+  city: string;
+  country: string;
   projectType: string;
   budget: string;
   timeline: string;
@@ -31,10 +33,20 @@ const projectSubmissionSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    country: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     projectType: {
       type: String,
       required: true,
-      enum: ['web', 'mobile', 'data', 'ml', 'other'],
+      enum: ['ai-ml', 'data-science', 'web-dev', 'mobile-dev', 'database-cloud', 'other'],
     },
     budget: {
       type: String,
