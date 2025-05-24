@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ProjectSubmission {
@@ -200,7 +200,7 @@ function AdminPanel() {
   };
 
   return (
-    <div className="min-h-screen bg-white/80 backdrop-blur-sm py-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
       {/* Success/Error Alert */}
       <AnimatePresence>
         {deleteAlert.show && (
@@ -395,10 +395,16 @@ function AdminPanel() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-16">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-blue-100">
           <h1 className="text-3xl font-bold text-blue-900">Admin Panel</h1>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
+            <Link
+              to="/"
+              className="px-6 py-2 bg-white text-blue-700 font-medium rounded-xl transition-colors duration-200 border border-blue-200 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200 transform hover:scale-105 focus:ring-offset-2 shadow-lg hover:shadow-xl"
+            >
+              Back to Home
+            </Link>
             <button
               onClick={() => setPasswordModal(true)}
               className="px-6 py-2 bg-white text-blue-700 font-medium rounded-xl transition-colors duration-200 border border-blue-200 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200 transform hover:scale-105 focus:ring-offset-2 shadow-lg hover:shadow-xl"

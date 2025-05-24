@@ -1,13 +1,12 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowDownIcon, CodeBracketIcon, ChartBarIcon, CpuChipIcon, EnvelopeIcon, AcademicCapIcon, RocketLaunchIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowDownIcon, CodeBracketIcon, ChartBarIcon, CpuChipIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
 import Navbar from './components/Navbar';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Footer from './components/Footer';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
-import React, { useRef, useState } from 'react';
 import AdminPanel from './components/AdminPanel';
 import ProjectOrderForm from './components/ProjectOrderForm';
 
@@ -87,38 +86,6 @@ const AnimatedBackground = () => {
 };
 
 function Home() {
-  // Define the text content for the hero section
-  const heroText = [
-    "Unlock the power of",
-    "AI and Machine Learning",
-    "for your business.",
-  ];
-
-  // Services data - updated to reflect AI/ML focus
-  const services = [
-    {
-      icon: <CpuChipIcon className="h-12 w-12 text-blue-500 mx-auto mb-4" />,
-      title: "AI & Machine Learning Development",
-      description: "Custom AI/ML model training, integration, and deployment for predictive analytics, automation, and more.",
-    },
-    {
-      icon: <ChartBarIcon className="h-12 w-12 text-green-500 mx-auto mb-4" />,
-      title: "Data Science & Analytics",
-      description: "Unlock insights from your data with advanced statistical analysis, data visualization, and reporting.",
-    },
-    {
-      icon: <CodeBracketIcon className="h-12 w-12 text-purple-500 mx-auto mb-4" />,
-      title: "Full-Stack Web & Mobile Development",
-      description: "Building robust and scalable web and mobile applications tailored to your needs.",
-    },
-  ];
-
-  const contactRef = useRef<HTMLDivElement>(null);
-
-  const scrollToContact = () => {
-    contactRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -130,7 +97,7 @@ function Home() {
           <AnimatedBackground />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-200/30 via-transparent to-transparent" />
         </div>
-
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 z-10">
           <div className="text-center">
             <motion.div
@@ -344,14 +311,13 @@ function Home() {
 function App() {
   return (
     <Router>
-      {/* Animated Abstract Dots Background Container */}
       <div className="relative min-h-screen overflow-hidden">
         <div className="fixed inset-0 w-full h-full custom-animated-gradient noise-texture z-0" />
 
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
-          <Route // Homepage is now public
+          <Route
             path="/"
             element={
               <>
@@ -372,7 +338,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* Add other protected routes here within ProtectedRoute */}
+
+          {/* Catch all route - redirect to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
