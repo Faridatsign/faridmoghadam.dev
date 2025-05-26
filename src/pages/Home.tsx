@@ -1,3 +1,8 @@
+/**
+ * Home page component that serves as the main landing page
+ * Combines all sections of the portfolio website
+ */
+
 import React from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDownIcon } from '@heroicons/react/24/outline'
@@ -13,29 +18,34 @@ import AnimatedSymbols from '../components/AnimatedSymbols'
 // Main Home component that combines all sections
 const Home: React.FC = () => {
   return (
+    // Main container with minimum height of screen
     <div className="min-h-screen">
-      {/* Navigation bar */}
+      {/* Navigation bar component */}
       <Navbar />
 
-      {/* Hero section with animated background */}
+      {/* Hero section with animated background and content */}
       <section id="hero" className="relative flex items-center justify-center min-h-[90vh] overflow-hidden py-20">
-        {/* Background gradient and effects */}
+        {/* Background effects container */}
         <div className="absolute inset-0 z-0">
+          {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-white to-blue-50/80 opacity-95" />
+          {/* Radial gradient effect */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-200/30 via-transparent to-transparent" />
+          {/* Animated symbols in background */}
           <AnimatedSymbols />
         </div>
         
-        {/* Hero content */}
+        {/* Main content container */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 z-10">
           <div className="text-center">
+            {/* Animated content wrapper */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="space-y-6"
             >
-              {/* Main title */}
+              {/* Main title with animation */}
               <motion.h1 
                 className="text-5xl sm:text-6xl md:text-7xl font-bold text-blue-600 tracking-tight"
                 initial={{ opacity: 0, y: 20 }}
@@ -45,7 +55,7 @@ const Home: React.FC = () => {
                 Farid Moghadam
               </motion.h1>
 
-              {/* Subtitle */}
+              {/* Subtitle with animation */}
               <motion.p 
                 className="text-xl sm:text-2xl text-gray-700 max-w-2xl mx-auto italic"
                 initial={{ opacity: 0, y: 20 }}
@@ -57,7 +67,7 @@ const Home: React.FC = () => {
                 Skilled in Python, R, SQL, and AWS services to drive data-driven decision-making.
               </motion.p>
 
-              {/* Call to action button */}
+              {/* Call to action button with hover animation */}
               <motion.div 
                 className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
                 initial={{ opacity: 0, y: 20 }}
@@ -77,7 +87,7 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        {/* Scroll indicator */}
+        {/* Animated scroll indicator */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -118,7 +128,7 @@ const Home: React.FC = () => {
         <Contact />
       </section>
 
-      {/* Footer */}
+      {/* Footer component */}
       <Footer />
     </div>
   )

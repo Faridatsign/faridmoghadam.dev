@@ -1,12 +1,8 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-interface AnimatedBackgroundProps {
-  excludeHero?: boolean;
-}
-
 // AnimatedBackground component that creates a dynamic background effect
-const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({ excludeHero = false }) => {
+const AnimatedBackground: React.FC = () => {
   // Generate random lines for animation
   const lines = Array.from({ length: 40 }, (_, i) => ({
     id: i,
@@ -20,7 +16,7 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({ excludeHero = f
   }));
 
   return (
-    <div className={`absolute inset-0 overflow-hidden pointer-events-none ${excludeHero ? 'top-[90vh]' : ''}`}>
+    <div className="fixed inset-0 overflow-hidden pointer-events-none">
       {/* Primary animated lines */}
       {lines.map((line) => (
         <motion.div
